@@ -1,6 +1,6 @@
 class Percolation {
 	public Percolation(int n) {
-
+		
 	}
 
 	public void open(int row, int col) {
