@@ -2,34 +2,33 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     private boolean[] grid;
-    private int gridDim;
-    private WeightedQuickUnionUF uf;
-    private int ufSize;
+    private final int gridDim;
+    private final WeightedQuickUnionUF uf;
     private int numberOfOpenedSites;
-    private int topPoint;
-    private int bottomPoint;
+    private final int topPoint;
+    private final int bottomPoint;
 
     // Neighbors coordinate(left, top, right, bottom)
-    private int[] nx = {-1, 0, 1, 0};
-    private int[] ny = {0, -1, 0, 1};
+    private final int[] nx = { -1, 0, 1, 0 };
+    private final int[] ny = { 0, -1, 0, 1 };
 
     // create n-by-n grid, with all sites blocked
     public Percolation(int n) {
         if (n <= 0) {
-            throw  new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException();
         }
 
-        this.grid = new boolean[n*n];
+        this.grid = new boolean[n * n];
         this.gridDim = n;
         // Add two complement points for using them as virtual nodes(top and bottom)
-        this.ufSize = n * n + 2;
-        this.uf = new WeightedQuickUnionUF(this.ufSize);
+        int ufSize = (n + 2) * (n + 2);
+        this.uf = new WeightedQuickUnionUF(ufSize);
         this.numberOfOpenedSites = 0;
 
         // Virtual nodes on grid, connected to top and bottom rows
         this.topPoint = 0;
-        this.bottomPoint = this.ufSize - 1;
-        for (int i = 1; i <= n; i++) {
+        this.bottomPoint = ufSize - 1;
+        for (int i = 0; i < n; i++) {
             this.uf.union(topPoint, i);
             this.uf.union(bottomPoint, this.dim2ToDim1(n - 1, i));
         }
@@ -40,7 +39,7 @@ public class Percolation {
         row--;
         col--;
         if (!checkBounds(row, col)) {
-            throw  new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException();
         }
 
         if (this.isOpen(row + 1, col + 1)) {
@@ -70,7 +69,7 @@ public class Percolation {
         row--;
         col--;
         if (!checkBounds(row, col)) {
-            throw  new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException();
         }
         int index = this.dim2ToDim1(row, col);
         return this.grid[index];
@@ -81,11 +80,11 @@ public class Percolation {
         row--;
         col--;
         if (!checkBounds(row, col)) {
-            throw  new java.lang.IllegalArgumentException();
+            throw new java.lang.IllegalArgumentException();
         }
 
         int point = this.dim2ToDim1(row, col);
-        boolean connected = this.uf.connected(point, 0);
+        boolean connected = this.uf.connected(this.topPoint, point);
         return this.isOpen(row + 1, col + 1) && connected;
     }
 
@@ -107,6 +106,9 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
+        if (this.gridDim == 1) {
+            return this.isOpen(1, 1);
+        }
         return this.uf.connected(this.topPoint, this.bottomPoint);
     }
 
