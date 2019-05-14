@@ -36,8 +36,8 @@ public class PercolationStats {
 
         this.mean = StdStats.mean(this.thresholds);
         this.stddev = StdStats.stddev(this.thresholds);
-        this.confidenceLo = this.mean - (1.96 * Math.sqrt(this.stddev)) / Math.sqrt(trials);
-        this.confidenceHi = this.mean + (1.96 * Math.sqrt(this.stddev)) / Math.sqrt(trials);
+        this.confidenceLo = this.mean - (1.96 * this.stddev) / Math.sqrt(trials);
+        this.confidenceHi = this.mean + (1.96 * this.stddev) / Math.sqrt(trials);
     }
 
     // sample mean of percolation threshold
@@ -47,7 +47,7 @@ public class PercolationStats {
 
     // sample standard deviation of percolation threshold
     public double stddev() {
-        return stddev;
+        return this.stddev;
     }
 
     // low  endpoint of 95% confidence interval
@@ -57,7 +57,7 @@ public class PercolationStats {
 
     // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return confidenceHi;
+        return this.confidenceHi;
     }
 
     public static void main(String[] args) {

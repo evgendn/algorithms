@@ -4,6 +4,7 @@ public class Percolation {
     private boolean[] grid;
     private final int gridDim;
     private final WeightedQuickUnionUF uf;
+    private final WeightedQuickUnionUF uf2;
     private int numberOfOpenedSites;
     private final int topPoint;
     private final int bottomPoint;
@@ -23,6 +24,7 @@ public class Percolation {
         // Add two complement points for using them as virtual nodes(top and bottom)
         int ufSize = (n + 2) * (n + 2);
         this.uf = new WeightedQuickUnionUF(ufSize);
+        this.uf2 = new WeightedQuickUnionUF(ufSize - 1);
         this.numberOfOpenedSites = 0;
 
         // Virtual nodes on grid, connected to top and bottom rows
@@ -31,6 +33,8 @@ public class Percolation {
         for (int i = 0; i < n; i++) {
             this.uf.union(topPoint, i);
             this.uf.union(bottomPoint, this.dim2ToDim1(n - 1, i));
+
+            this.uf2.union(topPoint, i);
         }
     }
 
@@ -59,6 +63,7 @@ public class Percolation {
             if (this.checkBounds(nRow, nCol)) {
                 if (this.isOpen(nRow + 1, nCol + 1)) {
                     this.uf.union(point, nPoint);
+                    this.uf2.union(point, nPoint);
                 }
             }
         }
@@ -84,7 +89,7 @@ public class Percolation {
         }
 
         int point = this.dim2ToDim1(row, col);
-        boolean connected = this.uf.connected(this.topPoint, point);
+        boolean connected = this.uf2.connected(this.topPoint, point);
         return this.isOpen(row + 1, col + 1) && connected;
     }
 
