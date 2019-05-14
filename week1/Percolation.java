@@ -43,6 +43,10 @@ public class Percolation {
             throw  new java.lang.IllegalArgumentException();
         }
 
+        if (this.isOpen(row + 1, col + 1)) {
+            return;
+        }
+
         int point = this.dim2ToDim1(row, col);
 
         this.grid[point] = true;
